@@ -7,33 +7,35 @@ using namespace std;
 
 int main()
 {
-	srand(time(NULL));
+	cout << "Welcome to Saad's Sudoku Creator" << endl;
 	
-	/*
-	int val = 0;
-	while (val < 10)
-	{
-		int random = randomGen();
-		cout << random << " ";
-		if (random == val)
-		{
-			cout << endl;
-			val++;
-		}
-	}
-	*/
+	//rand function is seeded by time
+	srand(time(NULL));
 
+	// Variables
 	Sudoku* sudoku = new Sudoku();
-	int x, y, val;
+	int x, y, hints ,val;
+	string file1, file2;
+
 	/*cout << "Enter coord where you wanna place first value? x ";
 	cin >> x;
 	cout << "Enter coord where you wanna place first value? y ";
 	cin >> y;
 	cout << "Enter value: ";
-	cin >> val;*/
+	cin >> val;
+	cout << "How many number of hints you want to leave? ";
+	cin >> hints;
+	*/
 
-	// For first value placement
-	sudoku->buildMatrix(2,2,8);
+	x = 1; y = 1; val = 5;
+
+
+	// For first value placement for randomness
+	// params: Row num, Column Num, Value
+	sudoku->buildMatrix(x, y, val);
+
+	// To print Sudoku board
+	// params: 2d Matrix
 	printBoard(sudoku->getMatrix());
 
 

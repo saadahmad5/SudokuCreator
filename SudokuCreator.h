@@ -3,10 +3,32 @@
 class Sudoku
 {
 private:
-	const int MAX_ROWS = 9;
-	const int MAX_COLUMNS = 9;
 
 	int** matrix;
+
+
+	bool CreateRemSudoku(int** mat)
+	{
+		int row, col;
+		
+		// Determine if all board is constructed
+		if (!FindZero(mat, row, col))
+			return true;
+
+		// Sudoku Numbers 1 to 9  
+		for (int num = 1; num <= 9; num++)
+		{
+			if (!invalidToPlace(mat, row, col, num))
+			{
+				mat[row][col] = num;
+				// Recursive Back-track call
+				if (CreateRemSudoku(mat))
+					return true;
+				mat[row][col] = 0;
+			}
+		}
+		return false;
+	}
 
 public:
 	Sudoku()
@@ -16,7 +38,7 @@ public:
 		{
 			matrix[i] = new int[MAX_COLUMNS];
 		}
-
+		// Defaulting un assigned values as 0
 		for (int i = 0; i < MAX_ROWS; ++i)
 		{
 			for (int j = 0; j < MAX_COLUMNS; ++j)
@@ -24,7 +46,6 @@ public:
 				matrix[i][j] = 0;
 			}
 		}
-
 	}
 
 	int** getMatrix()
@@ -34,33 +55,23 @@ public:
 
 	void buildMatrix(int x, int y, int val)
 	{
+		// From human-based-indexing to array-based-index
 		--x; --y;
 		matrix[x][y] = val;
-
-		int i = 0; int j = 0;
 		
-		for (int i = 0; i < MAX_ROWS; ++i)
+		int i = 0, j = 0, temp;
+		for (; j < MAX_COLUMNS; ++j)
 		{
-			for (int j = 0; j < MAX_COLUMNS; ++j)
+			if ((x != i) || (y != j))
 			{
-				int temp = randomGen();
-
-				if ((x == i) && (y == j))
-					cout << matrix[i][j] << " ";
-				if ((x != i) || (y != j))
+				do 
 				{
-					while (invalidToPlace(matrix, i, j, temp))
-					{
-						temp = randomGen();
-					}
-					// cout << temp << " ";
-					matrix[i][j] = temp;
-					cout << matrix[i][j] << " ";
-				}
-				//cout << "Processed: (" << i + 1 << "," << j + 1 << ") with value: " << temp << endl;
+					temp = randomGen();
+				} 
+				while (invalidToPlace(matrix, i, j, temp));
+				matrix[i][j] = temp;
 			}
-			cout << endl;
 		}
-
+		CreateRemSudoku(matrix);
 	}
 };
