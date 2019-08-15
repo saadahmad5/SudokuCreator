@@ -2,6 +2,8 @@
 
 static int countOfRecursiveSteps = 0;
 static int countOfBackTrack = 0;
+static int hits = 0;
+static int miss = 0;
 
 class Sudoku
 {
@@ -26,6 +28,7 @@ private:
 		{
 			if (!invalidToPlace(mat, row, col, num))
 			{
+				hits++;
 				mat[row][col] = num;
 
 				if (CreateRemSudoku(mat)) 
@@ -34,6 +37,10 @@ private:
 					return true;
 				}
 				mat[row][col] = 0;
+			}
+			else
+			{
+				miss++;
 			}
 		}
 		return false;

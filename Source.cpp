@@ -63,12 +63,15 @@ int main()
 	cout << "Partial Grid: " << endl;
 	printBoard(sudoku->getSudokuMatrix());
 
-	cout << "Number of Recursive steps for creating Sudoku puzzle: "
+	cout << endl << "================ Statistical Data ================" << endl
+		<< "Number of Recursive steps for creating Sudoku puzzle: "
 		 << countOfRecursiveSteps << endl
 		 << "Time elapsed during creation of Sudoku is " 
 		 << (afterCreate - beforeCreate) << " in milliSeconds" << endl
 		 << "Count of BackTracking is "
-	   	 << countOfBackTrack << endl;
+	   	 << countOfBackTrack << endl
+		 << "Number of Random Number Hits on Sudoku board: " << hits << endl
+		<< "Number of Random Number Miss on Sudoku board: " << miss << endl;
 
 
 
@@ -147,12 +150,15 @@ int main()
 			}
 		}
 
-		ofile2 << "Number of Recursive steps for creating Sudoku puzzle: "
+	ofile2  << endl << "================ Statistical Data ================" << endl
+			<< "Number of Recursive steps for creating Sudoku puzzle: "
 			<< countOfRecursiveSteps << endl
 			<< "Time elapsed during creation of Sudoku is "
 			<< (afterCreate - beforeCreate) << " in milliSeconds" << endl
 			<< "Count of BackTracking is " 
-			<< countOfBackTrack << endl;
+			<< countOfBackTrack << endl
+			<< "Number of Random Number Hits on Sudoku board: " << hits << endl
+			<< "Number of Random Number Miss on Sudoku board: " << miss << endl;
 
 	}
 	else
@@ -160,7 +166,7 @@ int main()
 		cout << "File I/O error" << endl;
 	}
 	ofile2.close();
-	cout << "Press any key to exit to Windows ... ";
+	cout << endl << "Press any key to exit to Windows ... ";
 	getchar();
 	return 0;
 }
