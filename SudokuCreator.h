@@ -1,5 +1,8 @@
 #include"SudokuCommons.h"
 
+static int countOfRecursiveSteps = 0;
+static int countOfBackTrack = 0;
+
 class Sudoku
 {
 private:
@@ -7,13 +10,17 @@ private:
 	int** matrix;
 	int** tempmatrix;
 
+
 	bool CreateRemSudoku(int** mat)
 	{
+		countOfBackTrack++;
 		int row, col;
 		
 		// Determine if all board is constructed
-		if (!FindZero(mat, row, col))
+		if (!FindZero(mat, row, col)) {
 			return true;
+		}
+			
 
 		for (int num = 1; num <= 9; num++)
 		{
@@ -21,8 +28,11 @@ private:
 			{
 				mat[row][col] = num;
 
-				if (CreateRemSudoku(mat))
+				if (CreateRemSudoku(mat)) 
+				{
+					countOfRecursiveSteps++;
 					return true;
+				}
 				mat[row][col] = 0;
 			}
 		}
@@ -47,7 +57,7 @@ public:
 		}
 		
 		/*
-		int grid[9][9] = { {3, 0, 6, 5, 0, 8, 4, 0, 0},
+		int matrix2[9][9] = { {3, 0, 6, 5, 0, 8, 4, 0, 0},
 					  {5, 2, 0, 0, 0, 0, 0, 0, 0},
 					  {0, 8, 7, 0, 0, 0, 0, 3, 1},
 					  {0, 0, 3, 0, 1, 0, 0, 8, 0},

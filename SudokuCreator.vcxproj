@@ -116,7 +116,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="SudokuCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SudokuCommons.h" />

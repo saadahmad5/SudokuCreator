@@ -1,0 +1,39 @@
+The co-ordinate for first value is (1, 1)
+The value placed is: 5
+The number of hints to leave are: 17
+The file name for partial matrix output file name: statSdk2.dat
+
+The CONSTRUCTED Matrix is: 
+
+ ------- ------- -------
+| 5 8 2 | 6 9 4 | 1 7 3 |
+| 1 3 4 | 2 5 7 | 6 8 9 |
+| 6 7 9 | 1 3 8 | 2 4 5 |
+ ------- ------- ------- 
+| 2 1 3 | 4 6 5 | 7 9 8 |
+| 4 5 6 | 7 8 9 | 3 1 2 |
+| 7 9 8 | 3 1 2 | 4 5 6 |
+ ------- ------- ------- 
+| 3 2 5 | 8 4 1 | 9 6 7 |
+| 8 4 7 | 9 2 6 | 5 3 1 |
+| 9 6 1 | 5 7 3 | 8 2 4 |
+ ------- ------- ------- 
+
+The PARTIAL Matrix is: 
+
+ ------- ------- -------
+|       |   9   |       |
+|       |       |       |
+|       |       |     5 |
+ ------- ------- ------- 
+|       |       | 7     |
+|     6 |   8 9 | 3 1 2 |
+|     8 |       | 4     |
+ ------- ------- ------- 
+|       |       |   6   |
+|     7 |   2   |   3   |
+| 9     |   7   |       |
+ ------- ------- ------- 
+Number of Recursive steps for creating Sudoku puzzle: 72
+Time elapsed during creation of Sudoku is 15 in milliSeconds
+Count of BackTracking is 166
