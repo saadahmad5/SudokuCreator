@@ -7,6 +7,7 @@ using namespace std;
 const int MAX_ROWS = 9;
 const int MAX_COLUMNS = 9;
 
+// Returns random number
 int randomGen()
 {
 	int x = 10;
@@ -92,42 +93,4 @@ bool FindZero(int** matrix, int &row, int &col)
 bool invalidToPlace(int** matrix, int rown, int clmn, int value)
 {
 	return invalidInRow(matrix, rown, value) || invalidInColumn(matrix, clmn, value) || invalidInBox(matrix, rown - rown % 3, clmn - clmn % 3, value);
-}
-
-int countZero(int** matrix)
-{
-	int count = 0;
-	for (int i = 0; i < MAX_ROWS; ++i)
-	{
-		for (int j = 0; j < MAX_COLUMNS; ++j)
-		{
-			if (matrix[i][j] == 0)
-				++count;
-		}
-	}
-	return count;
-}
-
-bool SolveSudoku(int** matrix)
-{
-	int row, col;
-
-	if (!FindZero(matrix, row, col))
-		return true; 
-
-	for (int num = 1; num <= 9; num++)
-	{
-
-		if (!invalidToPlace(matrix, row, col, num))
-		{
- 
-			matrix[row][col] = num;
- 
-			if (SolveSudoku(matrix))
-				return true;
-
-			matrix[row][col] = 0;
-		}
-	}
-	return false;
 }

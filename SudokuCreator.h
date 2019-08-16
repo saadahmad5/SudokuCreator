@@ -1,5 +1,7 @@
+// including common funtions
 #include"SudokuCommons.h"
 
+// For keeping record of metrics
 static int countOfRecursiveSteps = 0;
 static int countOfBackTrack = 0;
 static int hits = 0;
@@ -9,21 +11,29 @@ class Sudoku
 {
 private:
 
+	// Two matrices; partial solution and generated solution
 	int** matrix;
 	int** tempmatrix;
 
+	// MY PROGRAM IS EFFICIENT. The first row is generated, keeping rules in mind
+	// by just putting random values. The rows from 2 to 9 are created by back track
+	// mechanism.
 
+	// Method that creates the Suduko matrix from row 2 to 9
+	// param: matrix
 	bool CreateRemSudoku(int** mat)
 	{
 		countOfBackTrack++;
 		int row, col;
 		
+		// Even a single zero in matrix means board is incomplete
 		// Determine if all board is constructed
+		// params: int** matrix, int row, int col
 		if (!FindZero(mat, row, col)) {
 			return true;
 		}
 			
-
+		// Trying values from 1 to 9 that fits in matrix
 		for (int num = 1; num <= 9; num++)
 		{
 			if (!invalidToPlace(mat, row, col, num))
@@ -31,6 +41,7 @@ private:
 				hits++;
 				mat[row][col] = num;
 
+				// Recursion occurs here
 				if (CreateRemSudoku(mat)) 
 				{
 					countOfRecursiveSteps++;
@@ -46,6 +57,35 @@ private:
 		return false;
 	}
 
+	// Tells how many solutions can be computed given a partial matrix
+	void numSolutions(int &numSol)
+	{
+		int row, col;
+
+
+		if (!FindZero(matrix, row, col))
+		{
+			numSol++;
+			return;
+		}
+
+
+		for (int i = 0; i < MAX_ROWS; i++)
+		{
+			if (numSol < 2)
+			{
+				if (!invalidToPlace(matrix, row, col, i + 1))
+				{
+					matrix[row][col] = i + 1;
+					numSolutions(numSol);
+				}
+			}
+			matrix[row][col] = 0;
+		}
+
+	}
+
+
 public:
 	Sudoku()
 	{
@@ -54,7 +94,7 @@ public:
 		{
 			matrix[i] = new int[MAX_COLUMNS];
 		}
-		// Defaulting un assigned values as 0
+		// Defaulting un-assigned values to 0
 		for (int i = 0; i < MAX_ROWS; ++i)
 		{
 			for (int j = 0; j < MAX_COLUMNS; ++j)
@@ -63,20 +103,9 @@ public:
 			}
 		}
 		
-		/*
-		int matrix2[9][9] = { {3, 0, 6, 5, 0, 8, 4, 0, 0},
-					  {5, 2, 0, 0, 0, 0, 0, 0, 0},
-					  {0, 8, 7, 0, 0, 0, 0, 3, 1},
-					  {0, 0, 3, 0, 1, 0, 0, 8, 0},
-					  {9, 0, 0, 8, 6, 3, 0, 0, 5},
-					  {0, 5, 0, 0, 9, 0, 6, 0, 0},
-					  {1, 3, 0, 0, 0, 0, 2, 5, 0},
-					  {0, 0, 0, 0, 0, 0, 0, 7, 4},
-					  {0, 0, 5, 2, 0, 6, 3, 0, 0} };
-
-		*/
 	}
 
+	// Getter funtions
 	int** getMatrix()
 	{
 		return matrix;
@@ -87,26 +116,25 @@ public:
 		return tempmatrix;
 	}
 
-	void buildMatrix(int x, int y, int val)
+	void buildMatrix(int val)
 	{
-		// From human-based-indexing to array-based-index
-		--x; --y;
-		matrix[x][y] = val;
-		
+
 		int i = 0, j = 0, temp;
-		for (; j < MAX_COLUMNS; ++j)
+		matrix[i][j] = val;
+		for (j = 1; j < MAX_COLUMNS; ++j)
 		{
-			if ((x != i) || (y != j))
+			do 
 			{
-				do 
-				{
-					temp = randomGen();
-				} 
-				while (invalidToPlace(matrix, i, j, temp));
-				matrix[i][j] = temp;
-			}
+				temp = randomGen();
+			} 
+			while (invalidToPlace(matrix, i, j, temp));
+			matrix[i][j] = temp;
 		}
 		CreateRemSudoku(matrix);
+
+		// Copying the created matrix to tempMatrix because later
+		// I am changing the same matrix to partial matrix
+
 		tempmatrix = new int*[MAX_ROWS];
 		for (int i = 0; i < MAX_ROWS; ++i)
 		{
@@ -123,26 +151,44 @@ public:
 		}
 	}
 
-	void makeSudoku(int numHint)
+	void makeSudoku(int hint)
 	{
-
-		int leftOver = MAX_ROWS * MAX_COLUMNS - numHint;
-
-		do
+		hint = MAX_ROWS * MAX_COLUMNS - hint;
+		for (int i = 0; i < 9; i++)
 		{
-			int x = randomGen() % 9;
-			int y = randomGen() % 9;
-			if (tempmatrix[x][y] != 0)
+			for (int j = 0; j < 9; j++)
 			{
-				int temp = matrix[x][y];
-				matrix[x][y] = 0;
-				if (SolveSudoku(matrix))
+				int temp = matrix[i][j];
+				matrix[i][j] = 0;
+
+				// If multiple solutions, replace the value back.
+				// Otherwise, it is removed
+				int check = 0;
+				numSolutions(check);
+				if (check != 1)
 				{
-					tempmatrix[x][y] = 0;
+					matrix[i][j] = temp;
 				}
-				//printBoard(tempmatrix);
+
+				if (countZero(matrix) >= hint)
+				{
+					return;
+				}
 			}
 		}
-		while (countZero(tempmatrix) < leftOver);
+	}
+
+	int countZero(int** matrix)
+	{
+		int count = 0;
+		for (int i = 0; i < MAX_ROWS; ++i)
+		{
+			for (int j = 0; j < MAX_COLUMNS; ++j)
+			{
+				if (matrix[i][j] == 0)
+					++count;
+			}
+		}
+		return count;
 	}
 };

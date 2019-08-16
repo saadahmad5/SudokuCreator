@@ -21,49 +21,60 @@ int main()
 	DWORD afterCreate;
 	Sudoku* sudoku = new Sudoku();
 	ofstream ofile1, ofile2;
-	int x, y, hints ,val;
+	int rhints, hints ,val;
 	string file1, file2;
 
-	/*cout << "Enter coord where you wanna place first value? x ";
-	cin >> x;
-	cout << "Enter coord where you wanna place first value? y ";
-	cin >> y;
-	cout << "Enter value: ";
+	cout << "Enter the first value you want to place at (1,1) coord? ";
 	cin >> val;
 	cout << "How many number of hints you want to leave? ";
-	cin >> hints;
+	cin >> rhints;
 	cout << "Enter the partial matrix output file name: ";
 	cin >> file1;
 	cout << "Enter the console output and stats file name: ";
 	cin >> file2;
-	*/
-
-	file1 = "pSudoku2.dat";
+	
+	// For debugging default vals
+	/*file1 = "pSudoku2.dat";
 	file2 = "statSdk2.dat";
-	x = 1; y = 1; val = 5;
-	hints = 17;
+	val = 5;
+	hints = 17;*/
 
 
 	// For first value placement for randomness
 	// params: Row num, Column Num, Value
 	beforeCreate = GetTickCount();
-	sudoku->buildMatrix(x, y, val);
+	sudoku->buildMatrix(val);
 
 
 	// To print Randomly created Sudoku
 	// params: 2d Matrix
 	cout << "Randomly created Grid: " << endl;
-	printBoard(sudoku->getMatrix());
-
-	// Make Partial Grid i.e. Sudoku Board
-	sudoku->makeSudoku(hints);
-	afterCreate = GetTickCount();
-	// To print Partial Sudoku board
-	// params: 2d Matrix
-	cout << "Partial Grid: " << endl;
 	printBoard(sudoku->getSudokuMatrix());
 
+
+	// Make Partial Grid i.e. Sudoku Board
+	//sudoku->makeSudoku();
+	cout << "Partial Grid: (Be Patient!)" << endl;
+	
+	sudoku->makeSudoku(rhints);
+	afterCreate = GetTickCount();
+
+	// To print Partial Sudoku board
+	// params: 2d Matrix
+	printBoard(sudoku->getMatrix());
+
+	
+	hints = (MAX_ROWS * MAX_COLUMNS) - sudoku->countZero(sudoku->getMatrix());
+
+	// Just to debug and see that partial matrix solves to mine matrix
+	/*SolveSudoku(sudoku->getMatrix()); // From Mohamad Darwiche code
+	cout << "After solving this partial matrix: " << endl;
+	printBoard(sudoku->getMatrix());*/
+
+	// Statistical data
 	cout << endl << "================ Statistical Data ================" << endl
+		<< "The number of hints requested were: " << rhints << endl
+		<< "But the given Sudoku created provided hints " << hints << endl
 		<< "Number of Recursive steps for creating Sudoku puzzle: "
 		 << countOfRecursiveSteps << endl
 		 << "Time elapsed during creation of Sudoku is " 
@@ -78,7 +89,7 @@ int main()
 	ofile1.open(file1);
 	if (ofile1)
 	{
-		int** SdkMat = sudoku->getSudokuMatrix();
+		int** SdkMat = sudoku->getMatrix();
 		for (int i = 0; i < MAX_ROWS; ++i)
 		{
 			for (int j = 0; j < MAX_COLUMNS; ++j)
@@ -98,13 +109,13 @@ int main()
 	ofile2.open(file2);
 	if (ofile2)
 	{
-		ofile2 << "The co-ordinate for first value is (" << x << ", " << y
-			<< ")" << endl << "The value placed is: " << val << endl 
+		ofile2 << "The co-ordinate for first value is (1,1) and value placed is: "
+			<< val << endl 
 			<< "The number of hints to leave are: " << hints << endl
 			<< "The file name for partial matrix output file name: "
 			<< file2 << endl << endl
 			<< "The CONSTRUCTED Matrix is: " << endl << endl;
-		int** SdkMat = sudoku->getMatrix();
+		int** SdkMat = sudoku->getSudokuMatrix();
 		ofile2 << " ------- ------- -------" << endl;
 		for (int i = 0; i < MAX_ROWS; ++i)
 		{
@@ -126,7 +137,7 @@ int main()
 				ofile2 << " ------- ------- ------- " << endl;
 			}
 		}
-		SdkMat = sudoku->getSudokuMatrix();
+		SdkMat = sudoku->getMatrix();
 		ofile2 << endl << "The PARTIAL Matrix is: " << endl << endl
 			   << " ------- ------- -------" << endl;
 		for (int i = 0; i < MAX_ROWS; ++i)
@@ -151,6 +162,8 @@ int main()
 		}
 
 	ofile2  << endl << "================ Statistical Data ================" << endl
+			<< "The number of hints requested were: " << rhints << endl
+			<< "But the given Sudoku created provided hints " << hints << endl
 			<< "Number of Recursive steps for creating Sudoku puzzle: "
 			<< countOfRecursiveSteps << endl
 			<< "Time elapsed during creation of Sudoku is "
