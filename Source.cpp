@@ -1,3 +1,13 @@
+
+/*
+* Written by: Saad Ahmad
+* Date created: 7th of August
+* Date modified: 16th of August
+* Program: Sudoku
+* Description: Sudoku common methods
+*/
+
+
 #include<iostream>
 #include<fstream>
 #include<ctime>
@@ -9,8 +19,10 @@
 using namespace std;
 
 
-int main()
+int main(int argc, char* argv[])
 {
+	cout << "CIS350 Project 4" << endl << endl;
+
 	cout << "Welcome to Saad's Sudoku Creator" << endl;
 	
 	//rand function is seeded by time
@@ -21,29 +33,56 @@ int main()
 	DWORD afterCreate;
 	Sudoku* sudoku = new Sudoku();
 	ofstream ofile1, ofile2;
+	// required hints, hints left, value on 1,1
 	int rhints, hints ,val;
 	string file1, file2;
+	bool devMode = false;
+	char resp = 'n';
 
-	cout << "Enter the first value you want to place at (1,1) coord? ";
-	cin >> val;
-	cout << "How many number of hints you want to leave? ";
-	cin >> rhints;
-	cout << "Enter the partial matrix output file name: ";
-	cin >> file1;
-	cout << "Enter the console output and stats file name: ";
-	cin >> file2;
-	
+	// Arguments provided by command line 
+	if (argc == 3)
+	{
+		file1 = argv[1];
+		file2 = argv[2];
+		val = 5;
+		rhints = 17;
+	}
+	else
+	{
+		cout << "Do you want to activate Dev mode? to see backtracking? (y/other) ";
+		cin >> resp;
+		if (resp == 'y')
+			devMode = true;
+		do
+		{
+			cout << "Enter the first value you want to place at (1,1) coord? ";
+			cin >> val;
+			if (val < 0 || val > 9)
+				cout << "Invalid value" << endl;
+		} while (val < 0 || val > 9);
+		do
+		{
+			cout << "How many number of hints ranging [17,81] you want to leave? ";
+			cin >> rhints;
+			if (rhints < 17 || rhints > 81)
+				cout << "Invalid number of hints" << endl;
+		} while (rhints < 17 || rhints > 81);
+		cout << "Enter the partial matrix output file name: ";
+		cin >> file1;
+		cout << "Enter the console output and stats file name: ";
+		cin >> file2;
+	}
 	// For debugging default vals
-	/*file1 = "pSudoku2.dat";
-	file2 = "statSdk2.dat";
+	/*file1 = "pSudoku4.dat";
+	file2 = "statSdk4.dat";
 	val = 5;
-	hints = 17;*/
+	rhints = 17;*/
 
 
 	// For first value placement for randomness
 	// params: Row num, Column Num, Value
 	beforeCreate = GetTickCount();
-	sudoku->buildMatrix(val);
+	sudoku->buildMatrix(val, devMode);
 
 
 	// To print Randomly created Sudoku
